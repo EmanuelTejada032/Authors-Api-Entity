@@ -1,4 +1,7 @@
-﻿namespace Authors_Api
+﻿
+using Microsoft.EntityFrameworkCore;
+
+namespace Authors_Api
 {
     public class Startup
     {
@@ -12,8 +15,11 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
