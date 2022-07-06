@@ -17,9 +17,51 @@ namespace Authors_Api.Controllers
 
 
         [HttpGet]
+        [HttpGet("listall")]
+        [HttpGet("/listall")]
         public async Task<ActionResult<List<Author>>> Get()
         {
             return await context.Authors.Include(x => x.Books).ToListAsync();
+        }
+
+        [HttpGet("first")]
+        public async Task<ActionResult<Author>> GetFirst()
+        {
+            return await context.Authors.Include(x => x.Books).FirstOrDefaultAsync();
+        }
+
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Author>> Get(int id)
+        {
+            var author = await context.Authors.FirstOrDefaultAsync( x => x.Id == id);
+            if (author == null) return NotFound(); 
+            return author;
+        }
+
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Author>> GetByName(string name)
+        {
+            var author = await context.Authors.FirstOrDefaultAsync(x => x.Name.Contains(name));
+            if (author == null) return NotFound();
+            return author;
+        }
+
+        [HttpGet("names/{name}")]
+        public async Task<ActionResult<List<Author>>> GetAuthorsByName(string name)
+        {
+            var authorsList = await context.Authors.ToListAsync();
+            List<Author> filteredByNameAuthors = new List<Author>();
+            if(authorsList.Count > 0)
+            {
+                filteredByNameAuthors = authorsList.Where(x => x.Name.Contains(name)).ToList();
+            }
+            else
+            {
+                return NotFound("No authors found");
+            }
+            return filteredByNameAuthors;
         }
 
         [HttpPost]
