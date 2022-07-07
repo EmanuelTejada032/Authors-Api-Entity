@@ -40,8 +40,17 @@ namespace Authors_Api.Controllers
         }
 
 
-        [HttpGet("{name}")]
-        public async Task<ActionResult<Author>> GetByName(string name)
+        //[HttpGet("{name}")]
+        //public async Task<ActionResult<Author>> GetByName(string name)
+        //{
+        //    var author = await context.Authors.FirstOrDefaultAsync(x => x.Name.Contains(name));
+        //    if (author == null) return NotFound();
+        //    return author;
+        //}
+
+
+        [HttpGet("{name}/{secondParam=person}")]
+        public async Task<ActionResult<Author>> GetByName(string name, string secondParam)
         {
             var author = await context.Authors.FirstOrDefaultAsync(x => x.Name.Contains(name));
             if (author == null) return NotFound();
@@ -51,17 +60,16 @@ namespace Authors_Api.Controllers
         [HttpGet("names/{name}")]
         public async Task<ActionResult<List<Author>>> GetAuthorsByName(string name)
         {
-            var authorsList = await context.Authors.ToListAsync();
-            List<Author> filteredByNameAuthors = new List<Author>();
-            if(authorsList.Count > 0)
+
+            var authorsList = await context.Authors.Where(x => x.Name.Contains(name)).ToListAsync();
+            if (authorsList.Count > 0)
             {
-                filteredByNameAuthors = authorsList.Where(x => x.Name.Contains(name)).ToList();
+                return authorsList;
             }
             else
             {
                 return NotFound("No authors found");
             }
-            return filteredByNameAuthors;
         }
 
         [HttpPost]
