@@ -40,13 +40,13 @@ namespace Authors_Api.Controllers
         }
 
 
-        //[HttpGet("{name}")]
-        //public async Task<ActionResult<Author>> GetByName(string name)
-        //{
-        //    var author = await context.Authors.FirstOrDefaultAsync(x => x.Name.Contains(name));
-        //    if (author == null) return NotFound();
-        //    return author;
-        //}
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Author>> GetByName([FromRoute]string name)
+        {
+            var author = await context.Authors.FirstOrDefaultAsync(x => x.Name.Contains(name));
+            if (author == null) return NotFound();
+            return author;
+        }
 
 
         [HttpGet("{name}/{secondParam=person}")]
@@ -60,7 +60,6 @@ namespace Authors_Api.Controllers
         [HttpGet("names/{name}")]
         public async Task<ActionResult<List<Author>>> GetAuthorsByName(string name)
         {
-
             var authorsList = await context.Authors.Where(x => x.Name.Contains(name)).ToListAsync();
             if (authorsList.Count > 0)
             {
@@ -73,7 +72,7 @@ namespace Authors_Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Author author)
+        public async Task<ActionResult> Post([FromBody]Author author)
         {
             context.Add(author);
             await context.SaveChangesAsync();
