@@ -8,45 +8,52 @@ namespace Authors_Api.Entities
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "The field {0} is required")]
-        [StringLength(maximumLength: 6, ErrorMessage = "The field {0} can't be more than {1} characters")]
+        [StringLength(maximumLength: 100, ErrorMessage = "The field {0} can't be more than {1} characters")]
         [FirstLetterCapitalized]
         public string Name { get; set; }
-        [Range(18,85)]
-        [NotMapped]
-        public int Age { get; set; }
-        [CreditCard]
-        [NotMapped]
-        public string CreditCardNumber { get; set; }
-        [Url]
-        [NotMapped]
-        public string URL { get; set; }
-        [NotMapped]
-        public int publishedBooks { get; set; }
-        [NotMapped]
-        public int soldBooks { get; set; }
+        //[Range(18,85)]
+        //[NotMapped]
+        //public int Age { get; set; }
+        //[CreditCard]
+        //[NotMapped]
+        //public string CreditCardNumber { get; set; }
+        //[Url]
+        //[NotMapped]
+        //public string URL { get; set; }
+        //[NotMapped]
+        //public int publishedBooks { get; set; }
+        //[NotMapped]
+        //public int soldBooks { get; set; }
         public List<Book> Books { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if(soldBooks > publishedBooks)
+
+
+            if(Name.Length < 3)
             {
-                yield return new ValidationResult("sold books can't be more than published books", new string[] {nameof(soldBooks)});
+                yield return new ValidationResult("Name must be at least 3 chars long", new string[] {nameof(Name)});    
             }
 
-            if (soldBooks < 0)
-            {
-                yield return new ValidationResult("This must be a positive qunatity", new string[] { nameof(soldBooks) });
-            }
+            //if(soldBooks > publishedBooks)
+            //{
+            //    yield return new ValidationResult("sold books can't be more than published books", new string[] {nameof(soldBooks)});
+            //}
 
-            if (publishedBooks < 0)
-            {
-                yield return new ValidationResult("This must be a positive qunatity", new string[] { nameof(publishedBooks) });
-            }
+            //if (soldBooks < 0)
+            //{
+            //    yield return new ValidationResult("This must be a positive qunatity", new string[] { nameof(soldBooks) });
+            //}
 
-            if (publishedBooks == 0 && soldBooks > 0)
-            {
-                yield return new ValidationResult("there is no published books so books cannot have been sold", new string[] { nameof(soldBooks) });
-            }
+            //if (publishedBooks < 0)
+            //{
+            //    yield return new ValidationResult("This must be a positive qunatity", new string[] { nameof(publishedBooks) });
+            //}
+
+            //if (publishedBooks == 0 && soldBooks > 0)
+            //{
+            //    yield return new ValidationResult("there is no published books so books cannot have been sold", new string[] { nameof(soldBooks) });
+            //}
         }
     }
 }

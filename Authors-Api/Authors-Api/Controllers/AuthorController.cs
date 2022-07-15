@@ -1,4 +1,5 @@
 ﻿using Authors_Api.Entities;
+using Authors_Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +10,12 @@ namespace Authors_Api.Controllers
     public class AuthorController: ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IAuthorService service;
 
-        public AuthorController(ApplicationDbContext context)
+        public AuthorController(ApplicationDbContext context, IAuthorService service )
         {
             this.context = context;
+            this.service = service;
         }
 
 
@@ -74,6 +77,11 @@ namespace Authors_Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody]Author author)
         {
+            bool authorNameExists = await context.Authors.AnyAsync( x => x.Name == author.Name);
+            if (authorNameExists)
+            {
+                return BadRequest($"there is an author with the name {author.Name}");
+            }
             context.Add(author);
             await context.SaveChangesAsync();
             return Ok();
