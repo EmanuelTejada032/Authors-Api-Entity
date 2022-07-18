@@ -21,7 +21,12 @@ namespace Authors_Api
             services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); ;
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+            //services.AddTransient<IAuthorService, AuthorServiceADO>();
             services.AddTransient<IAuthorService, AuthorService>();
+
+            services.AddTransient<TransientService>();
+            services.AddScoped<ScopedService>();
+            services.AddSingleton<SingletonService>();
 
             //var authorController = new AuthorController(new ApplicationDbContext(null), new AuthorServiceADO(new AuthorServiceADODependency(new YetAnotherDependency())));
             // The same as services.AddTransient<IAuthorService, AuthorServiceADO>();

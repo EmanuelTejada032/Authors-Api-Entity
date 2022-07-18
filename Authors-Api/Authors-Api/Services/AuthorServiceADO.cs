@@ -12,6 +12,21 @@ namespace Authors_Api.Services
         {
 
         }
+
+        public Guid GetScopedGuid()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Guid GetSingletonGuid()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Guid GetTransientGuid()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class AuthorServiceADODependency

@@ -1,7 +1,11 @@
 ﻿namespace Authors_Api.Services.Interfaces
 {
-    public interface IService
+    public interface IAuthorService
     {
         void ExecuteTask();
+        Guid GetTransientGuid();
+
+        Guid GetScopedGuid();
+        Guid GetSingletonGuid();
     }
 }

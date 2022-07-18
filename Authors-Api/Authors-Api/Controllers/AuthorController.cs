@@ -1,7 +1,8 @@
 ﻿using Authors_Api.Entities;
-using Authors_Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Authors_Api.Services.Interfaces;
+using Authors_Api.Services;
 
 namespace Authors_Api.Controllers
 {
@@ -11,13 +12,36 @@ namespace Authors_Api.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IAuthorService service;
+        private readonly TransientService transientService;
+        private readonly ScopedService scopedService;
+        private readonly SingletonService singletonService;
 
-        public AuthorController(ApplicationDbContext context, IAuthorService service )
+        public AuthorController(ApplicationDbContext context, IAuthorService service,
+               TransientService transientService, ScopedService scopedService, SingletonService singletonService )
         {
             this.context = context;
             this.service = service;
+            this.transientService = transientService;
+            this.scopedService = scopedService;
+            this.singletonService = singletonService;
         }
 
+        [HttpGet("GUID")]
+        public ActionResult GetGuid()
+        {
+            return Ok(new
+            {
+                AuthorControllerTransientGuidCall = transientService.Guid,
+                AuthorControllerTransientGuidCallFromAuthorService = service.GetTransientGuid(),
+
+                AuthorControllerScopedGuidCall = scopedService.Guid,
+                AuthorControllerScopedGuidCallFromAuthorService = service.GetScopedGuid(),
+
+                AuthorControllerSingletonGuidCall = singletonService.Guid,
+                AuthorControllerSingletonGuidCallFromAuthorService = service.GetSingletonGuid()
+
+            }); 
+        }
 
         [HttpGet]
         [HttpGet("listall")]
@@ -30,7 +54,10 @@ namespace Authors_Api.Controllers
         [HttpGet("first")]
         public async Task<ActionResult<Author>> GetFirst()
         {
-            return await context.Authors.Include(x => x.Books).FirstOrDefaultAsync();
+            var firstAuthor = await context.Authors.Include(x => x.Books).FirstOrDefaultAsync();
+            if (firstAuthor != null)
+                return firstAuthor;
+            else return NotFound();
         }
 
 
