@@ -1,4 +1,5 @@
-﻿using Authors_Api.Services.Interfaces;
+﻿using Authors_Api.Entities;
+using Authors_Api.Services.Interfaces;
 
 namespace Authors_Api.Services
 {
@@ -11,6 +12,11 @@ namespace Authors_Api.Services
         public void ExecuteTask()
         {
 
+        }
+
+        public List<Author> Get()
+        {
+            return new List<Author>();
         }
 
         public Guid GetScopedGuid()

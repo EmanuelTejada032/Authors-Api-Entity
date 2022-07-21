@@ -15,15 +15,17 @@ namespace Authors_Api.Controllers
         private readonly TransientService transientService;
         private readonly ScopedService scopedService;
         private readonly SingletonService singletonService;
+        private readonly ILogger<AuthorController> logger;
 
         public AuthorController(ApplicationDbContext context, IAuthorService service,
-               TransientService transientService, ScopedService scopedService, SingletonService singletonService )
+               TransientService transientService, ScopedService scopedService, SingletonService singletonService, ILogger<AuthorController> logger )
         {
             this.context = context;
             this.service = service;
             this.transientService = transientService;
             this.scopedService = scopedService;
             this.singletonService = singletonService;
+            this.logger = logger;
         }
 
         [HttpGet("GUID")]
@@ -48,7 +50,13 @@ namespace Authors_Api.Controllers
         [HttpGet("/listall")]
         public async Task<ActionResult<List<Author>>> Get()
         {
-            return await context.Authors.Include(x => x.Books).ToListAsync();
+            //This is is a silly testing code
+            return service.Get();
+            //logger.LogDebug("Debug message");
+            //logger.LogCritical("Something wrong in the authors GET");
+            //logger.LogInformation("Getting all Authors");
+            //logger.LogDebug("Debug message");
+            //return await context.Authors.Include(x => x.Books).ToListAsync();
         }
 
         [HttpGet("first")]
@@ -64,6 +72,11 @@ namespace Authors_Api.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Author>> Get(int id)
         {
+            //This is is a silly testing code
+            logger.LogDebug("Debug message");
+            logger.LogCritical("Something wrong in the authors GET");
+            logger.LogInformation("Getting all Authors");
+            logger.LogDebug("Debug message");
             var author = await context.Authors.FirstOrDefaultAsync( x => x.Id == id);
             if (author == null) return NotFound(); 
             return author;
